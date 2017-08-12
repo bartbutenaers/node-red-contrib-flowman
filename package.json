@@ -26,7 +26,8 @@
     },
     "homepage": "https://github.com/btsimonh/node-red-contrib-flowman",
     "dependencies": {
-        
+        "fs-extra": "latest",
+        "node-red": "latest"
     },
     "maintainers": [
         {
