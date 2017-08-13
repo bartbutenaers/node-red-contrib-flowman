@@ -3,7 +3,6 @@ module.exports = function (RED) {
     var fs = require("fs-extra");
     var fspath = require("path");
     var util = require('util');
-    var RED2 = require('node-red');
 
     //console.log("loading flowman");
     
@@ -29,7 +28,7 @@ module.exports = function (RED) {
                 try {
                     setTimeout(function(){
                         try {
-                            RED2.nodes.removeFlow(id); 
+                            RED.nodes.removeFlow(id); 
                             node.log("deleted flow " + id);
                         } catch (e) {
                             node.error("failed to delete flow " + id + " " + util.inspect(e));
@@ -97,7 +96,7 @@ module.exports = function (RED) {
                 //node.error("done modify");
                 //msg.payload = flow;
                 //node.error("call addFlow");
-                var newflowidpromise = RED2.nodes.addFlow(flow);
+                var newflowidpromise = RED.nodes.addFlow(flow);
 
                 newflowidpromise.then( function(newflowid){
                     msg.flowId = newflowid;
@@ -131,7 +130,7 @@ module.exports = function (RED) {
         for (var a = 0; a < l; a++){
             // now for each wire.
             var orgnodeid = nodes[a].id;
-            nodes[a].id = RED2.util.generateId();
+            nodes[a].id = RED.util.generateId();
             //node.error("nodeid " + orgnodeid +"->"+nodes[a].id);
 
             if (ins){
@@ -301,7 +300,7 @@ module.exports = function (RED) {
                     // creat as many as we have 'outs', regardless of connection
                     for (var out = 0; out < outs.length; out++){
                         var output = clone(outputnodetemplate);
-                        output.id = RED2.util.generateId();
+                        output.id = RED.util.generateId();
                         output.name = output.name + (out+1);
                         // only try to connect if any.
                         if (OrgSubflowInstance.wires[out]){
@@ -429,7 +428,7 @@ module.exports = function (RED) {
             //node.error("modify");
 
             var flowid = f.id;
-            f.id = RED2.util.generateId();
+            f.id = RED.util.generateId();
             
             var nodes = f.nodes;        
             var l = nodes.length;
@@ -528,7 +527,7 @@ module.exports = function (RED) {
             }
             
             var doall = false;
-            var allnodes = RED2.nodes.getFlows().flows;
+            var allnodes = RED.nodes.getFlows().flows;
             
             if (ids === 'all'){
                 ids = [];
@@ -663,7 +662,7 @@ module.exports = function (RED) {
     // used by getflows node, and by saveflows node.
     function getflow(id, exporttype){
         exporttype = exporttype || 'addflow';
-        var flow = RED2.nodes.getFlow(id);
+        var flow = RED.nodes.getFlow(id);
 
         // copy the nodes array, as we may well want to add to it.
         var nodes = [];
@@ -680,7 +679,7 @@ module.exports = function (RED) {
         }
         
         if (exporttype !== 'original')
-            var globalnodes = RED2.nodes.getFlow('global');
+            var globalnodes = RED.nodes.getFlow('global');
 
         
         // add in subflows that we are using
@@ -825,7 +824,7 @@ module.exports = function (RED) {
             } else {
                 try{
                     // read all flow ids from whole of node-red
-                    var allnodes = RED2.nodes.getFlows().flows;
+                    var allnodes = RED.nodes.getFlows().flows;
                     for (var n = 0; n < allnodes.length; n++){
                         if (allnodes[n].type === 'tab'){
                             // duplicate so we don't give ability to modify
